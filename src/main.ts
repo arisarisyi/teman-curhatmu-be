@@ -14,7 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:4200', // Ganti dengan domain produksi nanti
+    origin: process.env.FRONTEND_CORS!, // Ganti dengan domain produksi nanti
     credentials: true,
   });
   app.use(cookieParser());
