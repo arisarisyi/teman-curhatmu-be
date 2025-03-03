@@ -43,6 +43,7 @@ export class AuthController {
       secure: true,
       sameSite: 'none',
       path: '/',
+      domain: '.alarisyi.web.id',
     });
     response.cookie('refresh_token', refreshToken);
 
