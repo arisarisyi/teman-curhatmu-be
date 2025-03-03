@@ -1,0 +1,25 @@
+services:
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs-chatbot
+    restart: always
+    ports:
+      - '${PORT}:${PORT}'
+    env_file: .env # Load semua variabel dari .env
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MONGO_URI=${MONGO_URI}
+      - PORT=${PORT}
+      - HOST=${HOST}
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - EXP_ACCESS_TOKEN=${EXP_ACCESS_TOKEN}
+      - EXP_REFRESH_TOKEN=${EXP_REFRESH_TOKEN}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
