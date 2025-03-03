@@ -100,4 +100,8 @@ export class AuthService {
   }
 
   // ***---- END Generate Token ---***
+
+  async getSelf(_id: string) {
+    return await this.userModel.findById(_id).select('username');
+  }
 }
