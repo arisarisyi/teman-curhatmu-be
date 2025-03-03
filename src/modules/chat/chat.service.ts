@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ChatTopic } from 'src/models/chat-topic.schema';
 import { CreateChatTopicDto } from './dto/create-topic.dto';
 import { QueryChatTopicDto } from './dto/query-chat-topic.dto';
+import { ChatMessage } from 'src/models/chat-message.schema';
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectModel(ChatTopic.name) private chatTopicModel: Model<ChatTopic>,
+    @InjectModel(ChatMessage.name) private chatMessageModel: Model<ChatMessage>,
   ) {}
 
   async createChatTopic(
@@ -77,5 +79,28 @@ export class ChatService {
       totalPages,
       limit,
     };
+  }
+
+  async deleteTopicAndMessages(topicId: string): Promise<void> {
+    // Validasi apakah topicId valid (misalnya, apakah ObjectId valid)
+    if (!topicId) {
+      throw new Error('Invalid topic ID');
+    }
+
+    const findTopic = await this.chatTopicModel.findById(topicId);
+    if (!findTopic) throw new NotFoundException();
+
+    // Hapus semua ChatMessage yang memiliki topic dengan ID yang sama
+    await this.chatMessageModel.deleteMany({ topic: topicId }).exec();
+
+    // Hapus ChatTopic dengan ID yang diberikan
+    const deletedTopic = await this.chatTopicModel
+      .findByIdAndDelete(topicId)
+      .exec();
+
+    // Jika topic tidak ditemukan, lempar error
+    if (!deletedTopic) {
+      throw new Error('Topic not found');
+    }
   }
 }

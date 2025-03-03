@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
   Req,
@@ -43,6 +45,15 @@ export class ChatController {
       _id,
       queryDto,
     );
+    return { result };
+  }
+
+  @Delete(':idTopic')
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete chat by Topic' })
+  async deleteTopic(@Param('idTopic') idTopic: string) {
+    const result = await this.chatService.deleteTopicAndMessages(idTopic);
     return { result };
   }
 }

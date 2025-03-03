@@ -112,7 +112,6 @@ export class ChatbotService {
     if (!sortBy) {
       sortBy = 'createdAt:asc';
     }
-    console.log(sortBy);
 
     // Parse sortBy parameter (format: "field:order")
     const [sortField, sortOrder] = sortBy.split(':');
