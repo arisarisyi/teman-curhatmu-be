@@ -38,7 +38,12 @@ export class AuthController {
   ) {
     const { accessToken, refreshToken, message } =
       await this.authService.login(loginBody);
-    response.cookie('access_token', accessToken);
+    response.cookie('access_token', accessToken, {
+      httpOnly: true, // Ini membuat cookie tidak dapat diakses oleh JavaScript
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+    });
     response.cookie('refresh_token', refreshToken);
 
     return { status: true, message: message ?? 'Success', statusCode: 200 };
